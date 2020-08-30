@@ -5,7 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(Collider))]
 public class Interactable : MonoBehaviour, IInteractable
 {
-    public event EventHandler<OnInteractArgs> OnInteracted;
+    public event EventHandler<OnInteractedWithArgs> OnInteractedWith;
     public event EventHandler<OnEnterInteractableRadiusArgs> OnEnterInteractableRadius;
     public event EventHandler<OnExitInteractableRadiusArgs> OnExitInteractableRadius;
 
@@ -21,7 +21,7 @@ public class Interactable : MonoBehaviour, IInteractable
     {
         staticInteractionActions.ForEach(action => action.PerformAction());
         
-        OnInteracted?.Invoke(gameObject, new OnInteractArgs
+        OnInteractedWith?.Invoke(gameObject, new OnInteractedWithArgs
         {
             TimeStamp = DateTimeOffset.Now.ToUnixTimeMilliseconds(),
             InteracterGameObject = interacter,

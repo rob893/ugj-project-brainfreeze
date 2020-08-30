@@ -22,14 +22,14 @@ public class HelloWorldAction : MonoBehaviour, IActionable
 
         interactable.OnEnterInteractableRadius += HandleOnEnterInteractableRadius;
         interactable.OnExitInteractableRadius += HandleOnExitInteractableRadius;
-        interactable.OnInteracted += HandleOnInteracted;
+        interactable.OnInteractedWith += HandleOnInteracted;
     }
 
     private void OnDestroy()
     {
         interactable.OnEnterInteractableRadius -= HandleOnEnterInteractableRadius;
         interactable.OnExitInteractableRadius -= HandleOnExitInteractableRadius;
-        interactable.OnInteracted -= HandleOnInteracted;
+        interactable.OnInteractedWith -= HandleOnInteracted;
     }
 
     private void HandleOnEnterInteractableRadius(object source, OnEnterInteractableRadiusArgs eventArgs)
@@ -42,7 +42,7 @@ public class HelloWorldAction : MonoBehaviour, IActionable
         Debug.Log("Test from handle on exit interactable");
     }
 
-    private void HandleOnInteracted(object source, OnInteractArgs eventArgs)
+    private void HandleOnInteracted(object source, OnInteractedWithArgs eventArgs)
     {
         Debug.Log("Test from handle on interact");
     }

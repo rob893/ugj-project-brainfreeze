@@ -6,6 +6,10 @@ public class PlayerInteractableManager : MonoBehaviour
 {
     public static PlayerInteractableManager Instance { get; private set; }
 
+    public event EventHandler<OnInteractedWithArgs> OnPlayerInteracted;
+    public event EventHandler<OnEnterInteractableRadiusArgs> OnPlayerEnterInteractableRadius;
+    public event EventHandler<OnExitInteractableRadiusArgs> OnPlayerExitInteractableRadius;
+
     public bool PlayerInRangeOfInteractable { get; private set; }
 
     [SerializeField]
@@ -32,6 +36,16 @@ public class PlayerInteractableManager : MonoBehaviour
 
         interactable.OnEnterInteractableRadius += HandleOnEnterInteractableRadius;
         interactable.OnExitInteractableRadius += HandleOnExitInteractableRadius;
+        interactable.OnInteractedWith += HandleOnInteractedWith;
+    }
+
+    public void DeregisterInteractable(IInteractable interactable)
+    {
+        interactables.Remove(interactable);
+
+        interactable.OnEnterInteractableRadius -= HandleOnEnterInteractableRadius;
+        interactable.OnExitInteractableRadius -= HandleOnExitInteractableRadius;
+        interactable.OnInteractedWith -= HandleOnInteractedWith;
     }
 
     private void Update()
@@ -104,6 +118,8 @@ public class PlayerInteractableManager : MonoBehaviour
 
         PlayerInRangeOfInteractable = true;
         interactablesPlayerIsInRangeOf.Add(eventArgs.InteractedWith);
+
+        OnPlayerEnterInteractableRadius?.Invoke(gameObject, eventArgs);
     }
 
     private void HandleOnExitInteractableRadius(object source, OnExitInteractableRadiusArgs eventArgs)
@@ -115,5 +131,17 @@ public class PlayerInteractableManager : MonoBehaviour
 
         interactablesPlayerIsInRangeOf.Remove(eventArgs.InteractedWith);
         PlayerInRangeOfInteractable = interactablesPlayerIsInRangeOf.Count == 0;
+
+        OnPlayerExitInteractableRadius?.Invoke(gameObject, eventArgs);
+    }
+
+    private void HandleOnInteractedWith(object source, OnInteractedWithArgs eventArgs)
+    {
+        if (!eventArgs.InteracterGameObject.CompareTag(Constants.PlayerTag))
+        {
+            return;
+        }
+
+        OnPlayerInteracted?.Invoke(gameObject, eventArgs);
     }
 }

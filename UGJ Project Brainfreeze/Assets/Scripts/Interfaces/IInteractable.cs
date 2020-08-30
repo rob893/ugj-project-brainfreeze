@@ -3,7 +3,7 @@ using UnityEngine;
 
 public interface IInteractable
 {
-    event EventHandler<OnInteractArgs> OnInteracted;
+    event EventHandler<OnInteractedWithArgs> OnInteractedWith;
     event EventHandler<OnEnterInteractableRadiusArgs> OnEnterInteractableRadius;
     event EventHandler<OnExitInteractableRadiusArgs> OnExitInteractableRadius;
     float InteractionRadius { get; }

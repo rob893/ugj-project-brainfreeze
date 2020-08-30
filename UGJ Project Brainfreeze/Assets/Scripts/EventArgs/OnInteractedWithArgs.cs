@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public struct OnInteractArgs
+public struct OnInteractedWithArgs
 {
     public long TimeStamp { get; set; }
     public GameObject InteracterGameObject { get; set; }
