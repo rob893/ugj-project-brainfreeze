@@ -10,16 +10,24 @@ public class PlayerInteractableManager : MonoBehaviour
 
     [SerializeField]
     private KeyCode interactKey = KeyCode.E;
+    [SerializeField]
+    private MouseButton interactMouseButton = MouseButton.Left;
 
     private GameObject player;
+    private Camera playerCamera;
 
-    private readonly List<IInteractable> interactablesPlayerIsInRangeOf = new List<IInteractable>();
-    private readonly List<IInteractable> interactables = new List<IInteractable>();
+    private readonly HashSet<IInteractable> interactablesPlayerIsInRangeOf = new HashSet<IInteractable>();
+    private readonly HashSet<IInteractable> interactables = new HashSet<IInteractable>();
 
     private PlayerInteractableManager() { }
 
     public void RegisterInteractable(IInteractable interactable)
     {
+        if (interactables.Contains(interactable))
+        {
+            return;
+        }
+
         interactables.Add(interactable);
 
         interactable.OnEnterInteractableRadius += HandleOnEnterInteractableRadius;
@@ -28,9 +36,9 @@ public class PlayerInteractableManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(interactKey))
+        if (Input.GetKeyDown(interactKey) || Input.GetMouseButtonDown((int)interactMouseButton))
         {
-            interactablesPlayerIsInRangeOf.ForEach(interactable => interactable.Interact(gameObject));
+            AttemptToInteract();
         }
     }
 
@@ -51,6 +59,13 @@ public class PlayerInteractableManager : MonoBehaviour
         {
             throw new Exception($"Unable to find GameObject with {Constants.PlayerTag} tag.");
         }
+
+        playerCamera = player.GetComponentInChildren<Camera>();
+
+        if (playerCamera == null)
+        {
+            throw new Exception("Unable to find camera attached to player.");
+        }
     }
 
     private void OnDestroy()
@@ -59,6 +74,24 @@ public class PlayerInteractableManager : MonoBehaviour
         {
             interactable.OnEnterInteractableRadius -= HandleOnEnterInteractableRadius;
             interactable.OnExitInteractableRadius -= HandleOnExitInteractableRadius;
+        }
+    }
+
+    private void AttemptToInteract()
+    {
+        if (!PlayerInRangeOfInteractable)
+        {
+            return;
+        }
+
+        if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out var hit, 100, ~(1 << 2), QueryTriggerInteraction.Ignore))
+        {
+            var hitInteractable = hit.transform.GetComponent<IInteractable>();
+
+            if (interactablesPlayerIsInRangeOf.Contains(hitInteractable))
+            {
+                hitInteractable.Interact(player);
+            }
         }
     }
 
