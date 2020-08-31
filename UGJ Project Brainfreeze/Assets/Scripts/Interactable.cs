@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,19 +16,35 @@ public class Interactable : MonoBehaviour, IInteractable
     private float interactionRadius = 3f;
 
     private readonly List<IActionable> staticInteractionActions = new List<IActionable>();
+    private readonly List<IInteractionRule> interactionRules = new List<IInteractionRule>();
     
 
     public void Interact(GameObject interacter)
     {
         staticInteractionActions.ForEach(action => action.PerformAction());
-        
-        OnInteractedWith?.Invoke(gameObject, new OnInteractedWithArgs
+
+        if (interactionRules.Count == 0 || interactionRules.All(rule => rule.ApplyInteractionRule(interacter, gameObject)))
         {
-            TimeStamp = DateTimeOffset.Now.ToUnixTimeMilliseconds(),
-            InteracterGameObject = interacter,
-            InteractedWithGameObject = gameObject,
-            InteractedWith = this
-        });
+            OnInteractedWith?.Invoke(gameObject, new OnInteractedWithArgs
+            {
+                TimeStamp = DateTimeOffset.Now.ToUnixTimeMilliseconds(),
+                InteracterGameObject = interacter,
+                InteractedWithGameObject = gameObject,
+                InteractedWith = this,
+                InteractionSuccessful = true
+            });
+        }
+        else
+        {
+            OnInteractedWith?.Invoke(gameObject, new OnInteractedWithArgs
+            {
+                TimeStamp = DateTimeOffset.Now.ToUnixTimeMilliseconds(),
+                InteracterGameObject = interacter,
+                InteractedWithGameObject = gameObject,
+                InteractedWith = this,
+                InteractionSuccessful = false
+            });
+        }
     }
 
     protected virtual void OnTriggerEnter(Collider other)
@@ -58,9 +75,14 @@ public class Interactable : MonoBehaviour, IInteractable
         attachedCollider.isTrigger = true;
         attachedCollider.radius = InteractionRadius;
 
-        foreach (var action in GetComponents<IActionable>())
+        foreach (var action in GetComponentsInChildren<IActionable>())
         {
             staticInteractionActions.Add(action);
+        }
+
+        foreach (var rule in GetComponentsInChildren<IInteractionRule>())
+        {
+            interactionRules.Add(rule);
         }
     }
 

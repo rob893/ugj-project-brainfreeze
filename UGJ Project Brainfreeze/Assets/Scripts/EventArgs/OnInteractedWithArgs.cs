@@ -6,4 +6,5 @@ public struct OnInteractedWithArgs
     public GameObject InteracterGameObject { get; set; }
     public GameObject InteractedWithGameObject { get; set; }
     public IInteractable InteractedWith { get; set; }
+    public bool InteractionSuccessful { get; set; }
 }
