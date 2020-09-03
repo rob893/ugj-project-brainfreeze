@@ -1,17 +1,18 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerPickUpManager : MonoBehaviour
 {
-    public bool HasItemPickedUp { get => itemPickedUp != null; }
+    public bool HasItemPickedUp { get => ItemPickedUp != null; }
+    public InteractableItem ItemPickedUp { get; private set; }
 
+    [SerializeField]
+    private KeyCode dropKey = KeyCode.R;
     [SerializeField]
     private Transform pickupTransform = null;
 
     private PlayerInteractableManager interactableManager;
-    private GameObject itemPickedUp = null;
+
 
     private void Start()
     {
@@ -25,6 +26,14 @@ public class PlayerPickUpManager : MonoBehaviour
         interactableManager.OnPlayerInteracted += HandleOnPlayerInteracted;
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(dropKey))
+        {
+            DropItem();
+        }
+    }
+
     private void OnDestroy()
     {
         interactableManager.OnPlayerInteracted -= HandleOnPlayerInteracted;
@@ -32,15 +41,32 @@ public class PlayerPickUpManager : MonoBehaviour
 
     private void HandleOnPlayerInteracted(object source, OnInteractedWithArgs eventArgs)
     {
-        if (itemPickedUp != null)
+        var interactiableItem = eventArgs.InteractedWithGameObject.GetComponent<InteractableItem>();
+
+        if (interactiableItem != null && interactiableItem.Item.CanPickUp)
         {
-            itemPickedUp.transform.parent = null;
-            itemPickedUp = null;
+            ItemPickedUp = interactiableItem;
+            ItemPickedUp.transform.parent = pickupTransform;
+            ItemPickedUp.transform.localPosition = new Vector3(0, 0, 0);
+
+            foreach (var collider in ItemPickedUp.GetComponentsInChildren<Collider>())
+            {
+                collider.enabled = false;
+            }
         }
-        else
+    }
+
+    private void DropItem()
+    {
+        if (HasItemPickedUp)
         {
-            eventArgs.InteractedWithGameObject.transform.parent = pickupTransform;
-            itemPickedUp = eventArgs.InteractedWithGameObject;
+            foreach (var collider in ItemPickedUp.GetComponentsInChildren<Collider>())
+            {
+                collider.enabled = true;
+            }
+
+            ItemPickedUp.transform.parent = null;
+            ItemPickedUp = null;
         }
     }
 }

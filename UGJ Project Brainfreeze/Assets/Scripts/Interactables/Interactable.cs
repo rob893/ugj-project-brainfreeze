@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [RequireComponent(typeof(Collider))]
@@ -15,9 +15,11 @@ public class Interactable : MonoBehaviour, IInteractable
     [SerializeField]
     private float interactionRadius = 3f;
 
+    private PlayerInteractableManager playerInteractableManager;
+
     private readonly List<IActionable> staticInteractionActions = new List<IActionable>();
     private readonly List<IInteractionRule> interactionRules = new List<IInteractionRule>();
-    
+
 
     public void Interact(GameObject interacter)
     {
@@ -69,7 +71,7 @@ public class Interactable : MonoBehaviour, IInteractable
         });
     }
 
-    private void Awake()
+    protected virtual void Awake()
     {
         var attachedCollider = gameObject.AddComponent<SphereCollider>();
         attachedCollider.isTrigger = true;
@@ -86,7 +88,18 @@ public class Interactable : MonoBehaviour, IInteractable
         }
     }
 
-    private void OnDrawGizmosSelected()
+    protected virtual void Start()
+    {
+        playerInteractableManager = PlayerInteractableManager.Instance;
+        playerInteractableManager.RegisterInteractable(this);
+    }
+
+    protected virtual void OnDestroy()
+    {
+        playerInteractableManager.DeregisterInteractable(this);
+    }
+
+    protected virtual void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, InteractionRadius);

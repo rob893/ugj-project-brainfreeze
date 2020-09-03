@@ -23,8 +23,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3583138008684241773}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1, y: -0.8, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 1.223}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6661184579014594306}
@@ -43,6 +43,7 @@ GameObject:
   - component: {fileID: 6661184579020416704}
   - component: {fileID: 6661184579009638464}
   - component: {fileID: 6661184579006794432}
+  - component: {fileID: 1784595547}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -319,6 +320,20 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
+--- !u!114 &1784595547
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6661184579014890272}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e4e2ea8d59c9cf49b81d92e6d920485, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dropKey: 114
+  pickupTransform: {fileID: 6159300069440218942}
 --- !u!1 &6661184579014890274
 GameObject:
   m_ObjectHideFlags: 0

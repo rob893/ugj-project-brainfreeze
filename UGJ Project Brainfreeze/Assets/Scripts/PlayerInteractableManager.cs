@@ -102,6 +102,8 @@ public class PlayerInteractableManager : MonoBehaviour
         {
             var hitInteractable = hit.transform.GetComponent<IInteractable>();
 
+            Debug.Log($"Interacted with {hit.transform.name}");
+
             if (interactablesPlayerIsInRangeOf.Contains(hitInteractable))
             {
                 hitInteractable.Interact(player);

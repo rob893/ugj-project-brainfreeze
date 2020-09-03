@@ -12,3 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da6ca14b0a789ff47af277d542c2c070, type: 3}
   m_Name: TestItem
   m_EditorClassIdentifier: 
+  ItemName: New Item
+  ItemId: 1
+  CanPickUp: 1
