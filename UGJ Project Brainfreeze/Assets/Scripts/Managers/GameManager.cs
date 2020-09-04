@@ -1,8 +1,13 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
+
+    public Interactable[] Interactables;
+
+    private Queue<Interactable> interactableQueue;
 
     private GameManager() { }
 
@@ -16,5 +21,7 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        interactableQueue = new Queue<Interactable>(Interactables);
     }
 }

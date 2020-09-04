@@ -757,11 +757,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1186183803}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6db3499d991f9034f8e72fc22196d836, type: 3}
+  m_Script: {fileID: 11500000, guid: 0567e92e549e6834294f1c4c226c4ffe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactKey: 101
-  interactMouseButton: 0
+  Interactables:
+  - {fileID: 797976003}
+  - {fileID: 3864194900421126099}
 --- !u!1 &1673084127
 GameObject:
   m_ObjectHideFlags: 0
@@ -906,6 +907,18 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 3864194900590518066, guid: d2944b6d196c841408104a5749c349e4, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: d2944b6d196c841408104a5749c349e4, type: 3}
+--- !u!114 &3864194900421126099 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3864194900590518025, guid: d2944b6d196c841408104a5749c349e4,
+    type: 3}
+  m_PrefabInstance: {fileID: 3864194900421126098}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6224dc3cce29bcd4f96b37d6fd21ebb9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &6661184580720056186
 PrefabInstance:
   m_ObjectHideFlags: 0
