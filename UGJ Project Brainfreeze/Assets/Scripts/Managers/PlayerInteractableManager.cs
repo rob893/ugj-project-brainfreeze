@@ -10,7 +10,9 @@ public class PlayerInteractableManager : MonoBehaviour
     public event EventHandler<OnEnterInteractableRadiusArgs> OnPlayerEnterInteractableRadius;
     public event EventHandler<OnExitInteractableRadiusArgs> OnPlayerExitInteractableRadius;
 
-    public bool PlayerInRangeOfInteractable { get; private set; }
+    public bool PlayerInRangeOfInteractable { get => interactablesPlayerIsInRangeOf.Count > 0; }
+    public KeyCode InteractKey { get => interactKey; }
+    public MouseButton InteractMouseButton { get => interactMouseButton; }
 
     [SerializeField]
     private KeyCode interactKey = KeyCode.E;
@@ -62,9 +64,9 @@ public class PlayerInteractableManager : MonoBehaviour
         {
             Instance = this;
         }
-        else if (Instance != this)
+        else if (Instance != null && Instance != this)
         {
-            Destroy(gameObject);
+            Destroy(this);
         }
 
         player = GameObject.FindGameObjectWithTag(Constants.PlayerTag);
@@ -102,10 +104,9 @@ public class PlayerInteractableManager : MonoBehaviour
         {
             var hitInteractable = hit.transform.GetComponent<IInteractable>();
 
-            Debug.Log($"Interacted with {hit.transform.name}");
-
-            if (interactablesPlayerIsInRangeOf.Contains(hitInteractable))
+            if (hitInteractable != null && interactablesPlayerIsInRangeOf.Contains(hitInteractable))
             {
+                Debug.Log($"Interacted with {hit.transform.name}");
                 hitInteractable.Interact(player);
             }
         }
@@ -118,7 +119,6 @@ public class PlayerInteractableManager : MonoBehaviour
             return;
         }
 
-        PlayerInRangeOfInteractable = true;
         interactablesPlayerIsInRangeOf.Add(eventArgs.InteractedWith);
 
         OnPlayerEnterInteractableRadius?.Invoke(gameObject, eventArgs);
@@ -132,7 +132,6 @@ public class PlayerInteractableManager : MonoBehaviour
         }
 
         interactablesPlayerIsInRangeOf.Remove(eventArgs.InteractedWith);
-        PlayerInRangeOfInteractable = interactablesPlayerIsInRangeOf.Count == 0;
 
         OnPlayerExitInteractableRadius?.Invoke(gameObject, eventArgs);
     }

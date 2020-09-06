@@ -8,12 +8,7 @@ public class RequireItemRule : MonoBehaviour, IInteractionRule
     {
         var pickUpManager = interacter.GetComponent<PlayerPickUpManager>();
 
-        if (pickUpManager == null)
-        {
-            return false;
-        }
-
-        if (pickUpManager.ItemPickedUp.Item != RequiredItem)
+        if (pickUpManager == null || pickUpManager.ItemPickedUp == null || pickUpManager.ItemPickedUp.Item != RequiredItem)
         {
             return false;
         }

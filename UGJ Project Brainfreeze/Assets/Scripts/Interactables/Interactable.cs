@@ -11,6 +11,9 @@ public class Interactable : MonoBehaviour, IInteractable
     public event EventHandler<OnExitInteractableRadiusArgs> OnExitInteractableRadius;
 
     public float InteractionRadius { get => interactionRadius; }
+    public bool HasBeenInteractedWith { get; private set; }
+    public bool HasBeenSuccessfullyInteractedWith { get; private set; }
+    public bool HasBeenUnsuccessfullyInteractedWith { get; private set; }
 
     [SerializeField]
     private float interactionRadius = 3f;
@@ -23,10 +26,12 @@ public class Interactable : MonoBehaviour, IInteractable
 
     public void Interact(GameObject interacter)
     {
+        HasBeenInteractedWith = true;
         staticInteractionActions.ForEach(action => action.PerformAction());
 
         if (interactionRules.Count == 0 || interactionRules.All(rule => rule.ApplyInteractionRule(interacter, gameObject)))
         {
+            HasBeenSuccessfullyInteractedWith = true;
             OnInteractedWith?.Invoke(gameObject, new OnInteractedWithArgs
             {
                 TimeStamp = DateTimeOffset.Now.ToUnixTimeMilliseconds(),
@@ -38,6 +43,7 @@ public class Interactable : MonoBehaviour, IInteractable
         }
         else
         {
+            HasBeenUnsuccessfullyInteractedWith = true;
             OnInteractedWith?.Invoke(gameObject, new OnInteractedWithArgs
             {
                 TimeStamp = DateTimeOffset.Now.ToUnixTimeMilliseconds(),
